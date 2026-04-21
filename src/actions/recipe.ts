@@ -1,7 +1,5 @@
 'use server'
 
-export const maxDuration = 60 // Vercel: サーバーアクションの最大実行時間を60秒に設定
-
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { google } from 'googleapis'
 import { YoutubeTranscript } from 'youtube-transcript'
