@@ -1,5 +1,7 @@
 'use server'
 
+export const maxDuration = 60 // Vercel: サーバーアクションの最大実行時間を60秒に設定
+
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { google } from 'googleapis'
 import { YoutubeTranscript } from 'youtube-transcript'
@@ -49,12 +51,16 @@ export async function extractRecipe(input: string) {
         let transcript = ''
         try {
           const transcriptData = await YoutubeTranscript.fetchTranscript(youtubeId)
-          transcript = transcriptData.map(t => t.text).join(' ')
+          const rawTranscript = transcriptData.map(t => t.text).join(' ')
+          // Geminiへの送信データ量を抑えるため先頭4000文字に制限
+          transcript = rawTranscript.slice(0, 4000)
         } catch (e) {
           console.warn('Transcript not available:', e)
         }
 
-        textToProcess = `Title: ${title}\nDescription: ${description}\nTranscript: ${transcript}`
+        // 説明欄も長い場合があるため1000文字に制限
+        const trimmedDescription = description.slice(0, 1000)
+        textToProcess = `Title: ${title}\nDescription: ${trimmedDescription}\nTranscript: ${transcript}`
         autoImageUrl = `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`
       } else {
         // 一般的なURLの場合
