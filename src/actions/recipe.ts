@@ -91,7 +91,7 @@ JSON以外のテキストは一切含めないでください。
 JSON構造：
 {
   "title": "料理名",
-  "base_servings": 人数（数値、不明ならnull）,
+  "base_servings": 人数（数値。「3〜4人前」のような範囲表記の場合は少ない方の数値を採用すること。例：「3〜4人前」→ 3。不明ならnull）,
   "tags": ["タグ1", "タグ2", "タグ3"],
   "ingredients": [
     {
@@ -138,10 +138,27 @@ ${textToProcess}
   try {
     const jsonText = responseText.replace(/```json\n?|\n?```/g, '').trim()
     const extractedData = JSON.parse(jsonText)
+
+    // base_servings の後処理：小数や範囲の場合に補正する
+    let baseServings = extractedData.base_servings
+    if (typeof baseServings === 'number') {
+      // 小数の場合は切り上げ（例: 3.5 → 3 の小さい方）
+      baseServings = Math.floor(baseServings)
+    } else if (typeof baseServings === 'string') {
+      // 「3〜4」「3-4」のような範囲表記が文字列で返ってきた場合、最小値を取る
+      const rangeMatch = baseServings.match(/(\d+)\s*[〜~\-]\s*\d+/)
+      if (rangeMatch) {
+        baseServings = parseInt(rangeMatch[1])
+      } else {
+        const num = parseInt(baseServings)
+        baseServings = isNaN(num) ? null : num
+      }
+    }
     
     return { 
       data: { 
-        ...extractedData, 
+        ...extractedData,
+        base_servings: baseServings,
         image_url: autoImageUrl,
         source_url: sourceUrl 
       } 
