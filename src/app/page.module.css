@@ -1,0 +1,241 @@
+.main {
+  min-height: 100vh;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--primary-color), #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dashboardActions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.searchBar {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 9999px;
+  padding: 0.8rem 1rem 0.8rem 3rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all var(--transition-speed);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.tagFilter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tagButton {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  padding: 0.4rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-speed);
+}
+
+.tagButton:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.activeTag {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white !important;
+}
+
+.recipeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.recipeCard {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: all var(--transition-speed);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.recipeCard:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary-color);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.recipeImageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.recipeThumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.recipePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sourceLink {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  transition: transform 0.2s;
+}
+
+.sourceLink:hover {
+  transform: scale(1.1);
+}
+
+.recipeInfo {
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.recipeTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.recipeCardTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.miniTag {
+  font-size: 0.75rem;
+  color: var(--primary-color);
+  background-color: rgba(99, 102, 241, 0.1);
+  padding: 0.1rem 0.5rem;
+  border-radius: 4px;
+}
+
+.recipeMeta {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 5rem 2rem;
+  background-color: var(--surface-color);
+  border-radius: 1.5rem;
+  border: 2px dashed var(--border-color);
+}
+
+.emptyTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.landing {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.primaryButton {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all var(--transition-speed);
+}
+
+.primaryButton:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.secondaryButton {
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  padding: 0.6rem 1.2rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all var(--transition-speed);
+}
+
+.secondaryButton:hover {
+  background-color: var(--surface-color);
+  color: var(--text-primary);
+}

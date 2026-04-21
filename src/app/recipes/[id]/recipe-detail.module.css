@@ -1,0 +1,481 @@
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin-bottom: 2rem;
+  font-weight: 500;
+  transition: color var(--transition-speed);
+}
+
+.backLink:hover {
+  color: var(--primary-color);
+}
+
+.header {
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 2.5rem;
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.servings {
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sourceBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.75rem;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: all var(--transition-speed);
+}
+
+.sourceBadge:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.headerMain {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .headerMain {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.imageWrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.recipeImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tagArea {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tagLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.tag {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: var(--primary-color);
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 4rem;
+}
+
+@media (max-width: 768px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ingredientList {
+  background-color: var(--surface-color);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  border: 1px solid var(--border-color);
+}
+
+.ingredientItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ingredientItem:last-child {
+  border-bottom: none;
+}
+
+.stepList {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.stepItem {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.stepNumber {
+  width: 32px;
+  height: 32px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.stepText {
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+.notFound {
+  text-align: center;
+  padding: 8rem 2rem;
+}
+
+.controls {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.editButton, .deleteButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  text-decoration: none;
+}
+
+.editButton {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.editButton:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.deleteButton {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.deleteButton:hover:not(:disabled) {
+  background-color: #ef4444;
+  color: white;
+  border-color: #ef4444;
+}
+
+.deleteButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.servingsSelector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--surface-color);
+  padding: 0.4rem 0.8rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border-color);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.servingButton {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+}
+
+.servingButton:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.activeServing {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+.ingredientAmount {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.titleEdit {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: transparent;
+  border: none;
+  border-bottom: 2px dashed var(--border-color);
+  color: var(--text-primary);
+  width: 100%;
+  margin-bottom: 1rem;
+  outline: none;
+}
+
+.servingsInput {
+  width: 60px;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-primary);
+  padding: 0.2rem 0.5rem;
+  text-align: center;
+  margin-right: 0.5rem;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+}
+
+.addButton:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.editList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.editItem {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.02);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.editInputName {
+  flex: 2;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 0.4rem 0;
+  outline: none;
+}
+
+.editInputAmount {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.4rem 0;
+  outline: none;
+}
+
+.removeButton {
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.removeButton:hover {
+  opacity: 1;
+  color: #ef4444;
+}
+
+.editStepItem {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.editTextarea {
+  flex: 1;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+  line-height: 1.6;
+  min-height: 80px;
+  resize: vertical;
+  outline: none;
+}
+
+.editTextarea:focus {
+  border-color: var(--primary-color);
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--surface-color);
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+}
+
+.imageUploadLabel {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0.75rem;
+  background: var(--bg-color);
+  padding: 0.4rem 0.8rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.tag button {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  margin-left: 0.4rem;
+  opacity: 0.6;
+}
+
+.tagInputWrapper {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed var(--border-color);
+  border-radius: 2rem;
+  padding: 0.1rem 0.5rem 0.1rem 0.75rem;
+}
+
+.tagInputWrapper input {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  outline: none;
+  font-size: 0.875rem;
+  width: 60px;
+}
+
+.tagInputWrapper button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+}
