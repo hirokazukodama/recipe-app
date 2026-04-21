@@ -202,7 +202,7 @@ export default function PreviewPage() {
                 <div key={i} className={styles.ingredientItem}>
                   <span className={styles.ingredientName}>{ing.name}</span>
                   <span className={styles.ingredientAmountText}>
-                    {formatIngredientAmount(scaled, ing.unit, ing.original_text)}
+                    {formatIngredientAmount(scaled, ing.unit, ing.original_text, recipe.base_servings, targetServings)}
                   </span>
                 </div>
               )

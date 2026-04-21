@@ -15,8 +15,8 @@ interface Props {
 }
 
 export default function RecipeDetailClient({ recipe, sortedSteps }: Props) {
-  // デフォルトの人数（不明なら1人分とする）
-  const [targetServings, setTargetServings] = useState(recipe.base_servings || 1)
+  // 常に1人分からスタート
+  const [targetServings, setTargetServings] = useState(1)
 
   const servingOptions = [1, 2, 3, 4]
 
@@ -51,7 +51,7 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: Props) {
               <div key={ing.id} className={styles.ingredientItem}>
                 <span style={{ fontWeight: 500 }}>{ing.name}</span>
                 <span className={styles.ingredientAmount}>
-                  {formatIngredientAmount(scaled, ing.unit, ing.original_text)}
+                  {formatIngredientAmount(scaled, ing.unit, ing.original_text, recipe.base_servings, targetServings)}
                 </span>
               </div>
             )
