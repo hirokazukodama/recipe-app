@@ -38,7 +38,7 @@ async function AuthBoundContent() {
     );
   }
 
-  // 1. ユーザーの全レシピを取得 (タグと画像含む)
+  // ユーザーの全レシピを取得 (タグと画像含む)
   const { data: recipes } = await supabase
     .from('recipes')
     .select(`
@@ -49,18 +49,19 @@ async function AuthBoundContent() {
     `)
     .order('created_at', { ascending: false });
 
-  // 2. ユーザーが持っている全タグ名を取得 (フィルタリング用)
-  const { data: tagsData } = await supabase
-    .from('tags')
-    .select('name')
-    .eq('user_id', user.id);
-  
-  const allTags = Array.from(new Set((tagsData || []).map(t => t.name)));
+  // 取得したレシピ一覧から利用されているタグを動的に抽出
+  const allTags = Array.from(
+    new Set(
+      (recipes || []).flatMap(recipe => 
+        recipe.recipe_tags?.map((rt: any) => rt.tags.name) || []
+      )
+    )
+  );
 
   return (
     <div className={styles.dashboardContainer}>
       <div className={styles.dashboardHeader}>
-        <h2 className={styles.sectionTitle}>マイレシピ</h2>
+        <div style={{ flex: 1 }}></div>
         <form action={logout}>
           <button type="submit" className={styles.secondaryButton}>
             <LogOut size={16} /> 

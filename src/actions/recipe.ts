@@ -217,40 +217,45 @@ export async function saveRecipe(recipeData: any) {
   const { error: stepError } = await supabase.from('steps').insert(steps)
   if (stepError) throw stepError
 
-  // タグの処理
+  // タグの一括処理（高速化）
   if (recipeData.tags && recipeData.tags.length > 0) {
-    for (const tagName of recipeData.tags) {
-      if (!tagName.trim()) continue
+    const validTags = Array.from(new Set(recipeData.tags.map((t: string) => t.trim()).filter(Boolean))) as string[];
 
-      // タグが存在するか確認
-      let { data: tag } = await supabase
+    if (validTags.length > 0) {
+      // 1. 既存のタグを一括取得
+      const { data: existingTags } = await supabase
         .from('tags')
-        .select('id')
+        .select('id, name')
         .eq('user_id', user.id)
-        .eq('name', tagName.trim())
-        .maybeSingle()
-      
-      // なければ作成
-      if (!tag) {
-        const { data: newTag, error: createError } = await supabase
+        .in('name', validTags);
+
+      const existingTagNames = new Set(existingTags?.map(t => t.name) || []);
+      const newTagNames = validTags.filter(name => !existingTagNames.has(name));
+
+      let allTagIds = existingTags?.map(t => t.id) || [];
+
+      // 2. 新規タグがあれば一括作成
+      if (newTagNames.length > 0) {
+        const newTagsToInsert = newTagNames.map(name => ({ user_id: user.id, name }));
+        const { data: newlyInsertedTags, error: createError } = await supabase
           .from('tags')
-          .insert({ user_id: user.id, name: tagName.trim() })
-          .select()
-          .single()
-        
-        if (createError) {
-          console.error('Tag creation error:', createError)
-          continue
+          .insert(newTagsToInsert)
+          .select('id');
+
+        if (!createError && newlyInsertedTags) {
+          allTagIds = [...allTagIds, ...newlyInsertedTags.map(t => t.id)];
+        } else {
+          console.error('Bulk tag creation error:', createError);
         }
-        tag = newTag
       }
 
-      // レシピと紐付け
-      if (tag) {
-        await supabase.from('recipe_tags').insert({
+      // 3. レシピとの紐付けを一括作成
+      if (allTagIds.length > 0) {
+        const recipeTagsToInsert = allTagIds.map(tag_id => ({
           recipe_id: recipe.id,
-          tag_id: tag.id
-        })
+          tag_id: tag_id
+        }));
+        await supabase.from('recipe_tags').insert(recipeTagsToInsert);
       }
     }
   }
@@ -313,35 +318,44 @@ export async function updateRecipe(id: string, recipeData: any) {
   const { error: stepError } = await supabase.from('steps').insert(steps)
   if (stepError) throw stepError
 
-  // 4. タグの更新
+  // 4. タグの一括更新（高速化）
   await supabase.from('recipe_tags').delete().eq('recipe_id', id)
   if (recipeData.tags && recipeData.tags.length > 0) {
-    for (const tagName of recipeData.tags) {
-      if (!tagName.trim()) continue
+    const validTags = Array.from(new Set(recipeData.tags.map((t: string) => t.trim()).filter(Boolean))) as string[];
 
-      let { data: tag } = await supabase
+    if (validTags.length > 0) {
+      // 1. 既存のタグを一括取得
+      const { data: existingTags } = await supabase
         .from('tags')
-        .select('id')
+        .select('id, name')
         .eq('user_id', user.id)
-        .eq('name', tagName.trim())
-        .maybeSingle()
-      
-      if (!tag) {
-        const { data: newTag, error: createError } = await supabase
+        .in('name', validTags);
+
+      const existingTagNames = new Set(existingTags?.map(t => t.name) || []);
+      const newTagNames = validTags.filter(name => !existingTagNames.has(name));
+
+      let allTagIds = existingTags?.map(t => t.id) || [];
+
+      // 2. 新規タグがあれば一括作成
+      if (newTagNames.length > 0) {
+        const newTagsToInsert = newTagNames.map(name => ({ user_id: user.id, name }));
+        const { data: newlyInsertedTags, error: createError } = await supabase
           .from('tags')
-          .insert({ user_id: user.id, name: tagName.trim() })
-          .select()
-          .single()
-        
-        if (createError) continue
-        tag = newTag
+          .insert(newTagsToInsert)
+          .select('id');
+
+        if (!createError && newlyInsertedTags) {
+          allTagIds = [...allTagIds, ...newlyInsertedTags.map(t => t.id)];
+        }
       }
 
-      if (tag) {
-        await supabase.from('recipe_tags').insert({
+      // 3. レシピとの紐付けを一括作成
+      if (allTagIds.length > 0) {
+        const recipeTagsToInsert = allTagIds.map(tag_id => ({
           recipe_id: id,
-          tag_id: tag.id
-        })
+          tag_id: tag_id
+        }));
+        await supabase.from('recipe_tags').insert(recipeTagsToInsert);
       }
     }
   }
