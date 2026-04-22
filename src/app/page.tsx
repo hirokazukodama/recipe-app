@@ -1,9 +1,10 @@
 import Link from "next/link";
 import styles from "./page.module.css";
-import { Plus, LogOut, UtensilsCrossed } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import { logout } from "./auth/actions";
 import RecipeDashboard from "@/components/RecipeDashboard";
+import { getDetailedRecipes, getTags } from "@/actions/recipe";
 
 export default function Home() {
   return (
@@ -38,25 +39,11 @@ async function AuthBoundContent() {
     );
   }
 
-  // ユーザーの全レシピを取得 (タグと画像含む)
-  const { data: recipes } = await supabase
-    .from('recipes')
-    .select(`
-      *,
-      recipe_tags(
-        tags(id, name)
-      )
-    `)
-    .order('created_at', { ascending: false });
+  // 1. 初期データ（最初の12件）を取得
+  const { data: recipes, hasMore, totalCount } = await getDetailedRecipes({ offset: 0, limit: 12 });
 
-  // 取得したレシピ一覧から利用されているタグを動的に抽出
-  const allTags = Array.from(
-    new Set(
-      (recipes || []).flatMap(recipe => 
-        recipe.recipe_tags?.map((rt: any) => rt.tags.name) || []
-      )
-    )
-  );
+  // 2. フィルタ用の全タグ一覧を取得
+  const allTags = await getTags();
 
   return (
     <div className={styles.dashboardContainer}>
@@ -71,8 +58,10 @@ async function AuthBoundContent() {
       </div>
 
       <RecipeDashboard 
-        initialRecipes={(recipes as any) || []} 
+        initialRecipes={recipes} 
         allTags={allTags} 
+        initialHasMore={hasMore || false}
+        totalCount={totalCount || 0}
       />
     </div>
   );

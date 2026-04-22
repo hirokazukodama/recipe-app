@@ -362,3 +362,85 @@ export async function updateRecipe(id: string, recipeData: any) {
 
   redirect(`/recipes/${id}`)
 }
+
+export async function getDetailedRecipes({ 
+  offset = 0, 
+  limit = 12, 
+  search = '', 
+  tag = '' 
+}: { 
+  offset?: number, 
+  limit?: number, 
+  search?: string, 
+  tag?: string 
+}) {
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { data: [], error: 'Unauthorized' }
+
+  let query = supabase
+    .from('recipes')
+    .select(`
+      *,
+      recipe_tags!inner(
+        tags!inner(id, name)
+      )
+    `, { count: 'exact' })
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+
+  // 検索条件の追加
+  if (search) {
+    query = query.ilike('title', `%${search}%`)
+  }
+
+  // タグ絞り込みの追加
+  if (tag) {
+    // タグ名で絞り込む。!innerを使用しているため、条件に合うものがない場合はレシピ自体が返らない
+    query = query.eq('recipe_tags.tags.name', tag)
+  } else {
+    // タグ絞り込みがない場合、中間テーブルがないレシピ（稀）も取得できるように !inner を外したクエリに切り替える必要がある
+    // ただし基本全レシピにタグは付与される設計なので、利便性重視で inner join なしをベースにする
+    query = supabase
+      .from('recipes')
+      .select(`
+        *,
+        recipe_tags(
+          tags(id, name)
+        )
+      `, { count: 'exact' })
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+    
+    if (search) {
+      query = query.ilike('title', `%${search}%`)
+    }
+  }
+
+  const { data, count, error } = await query.range(offset, offset + limit - 1)
+
+  if (error) {
+    console.error('Fetch recipes error:', error)
+    return { data: [], error: error.message }
+  }
+
+  return { 
+    data: (data as any) || [], 
+    totalCount: count || 0,
+    hasMore: (count || 0) > offset + limit
+  }
+}
+
+export async function getTags() {
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
+
+  const { data } = await supabase
+    .from('tags')
+    .select('name')
+    .eq('user_id', user.id)
+    .order('name')
+
+  return Array.from(new Set((data || []).map(t => t.name)))
+}

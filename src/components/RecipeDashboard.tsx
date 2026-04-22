@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import styles from '../app/page.module.css'
-import { Plus, Search, Tag, UtensilsCrossed, ExternalLink } from 'lucide-react'
+import { Search, UtensilsCrossed, ExternalLink, ArrowUp, Loader2 } from 'lucide-react'
+import { getDetailedRecipes } from '@/actions/recipe'
 
 interface Recipe {
   id: string
@@ -23,23 +24,102 @@ interface Recipe {
 interface Props {
   initialRecipes: Recipe[]
   allTags: string[]
+  initialHasMore: boolean
+  totalCount: number
 }
 
-export default function RecipeDashboard({ initialRecipes, allTags }: Props) {
+const LIMIT = 12
+
+export default function RecipeDashboard({ 
+  initialRecipes, 
+  allTags, 
+  initialHasMore, 
+  totalCount: initialTotalCount 
+}: Props) {
+  const [recipes, setRecipes] = useState<Recipe[]>(initialRecipes)
   const [search, setSearch] = useState('')
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
+  const [hasMore, setHasMore] = useState(initialHasMore)
+  const [loading, setLoading] = useState(false)
+  const [offset, setOffset] = useState(initialRecipes.length)
+  const [showScrollTop, setShowScrollTop] = useState(false)
+  
   const router = useRouter()
+  const observer = useRef<IntersectionObserver | null>(null)
+  const searchTimeout = useRef<NodeJS.Timeout | null>(null)
 
-  const filteredRecipes = useMemo(() => {
-    return initialRecipes.filter(recipe => {
-      const matchSearch = recipe.title.toLowerCase().includes(search.toLowerCase())
-      const matchTag = !selectedTag || recipe.recipe_tags?.some(rt => rt.tags.name === selectedTag)
-      return matchSearch && matchTag
-    })
-  }, [initialRecipes, search, selectedTag])
+  // レシピ読み込み関数
+  const loadRecipes = useCallback(async (currentOffset: number, isNewSearch: boolean = false) => {
+    if (loading) return
+    setLoading(true)
+
+    try {
+      const result = await getDetailedRecipes({ 
+        offset: currentOffset, 
+        limit: LIMIT, 
+        search, 
+        tag: selectedTag || '' 
+      })
+
+      if (isNewSearch) {
+        setRecipes(result.data)
+        setOffset(result.data.length)
+      } else {
+        setRecipes(prev => [...prev, ...result.data])
+        setOffset(prev => prev + result.data.length)
+      }
+      setHasMore(result.hasMore)
+    } catch (error) {
+      console.error('Failed to load recipes:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [search, selectedTag, loading])
+
+  // 検索・タグ変更時の再取得（デバウンス）
+  useEffect(() => {
+    // 初回レンダリング時はスキップしたいが、search/tagが変わった時にoffsetを0にしてリロードする
+    if (searchTimeout.current) clearTimeout(searchTimeout.current)
+
+    searchTimeout.current = setTimeout(() => {
+      // 初期データと異なる場合のみ実行
+      loadRecipes(0, true)
+    }, 400)
+
+    return () => {
+      if (searchTimeout.current) clearTimeout(searchTimeout.current)
+    }
+  }, [search, selectedTag])
+
+  // 無限スクロールの監視設定
+  const lastRecipeRef = useCallback((node: HTMLDivElement | null) => {
+    if (loading) return
+    if (observer.current) observer.current.disconnect()
+
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        loadRecipes(offset)
+      }
+    }, { threshold: 0.5 })
+
+    if (node) observer.current.observe(node)
+  }, [loading, hasMore, offset, loadRecipes])
+
+  // スクロール位置監視（トップに戻るボタン用）
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   return (
-    <div style={{ width: '100%', marginTop: '1rem' }}>
+    <div style={{ width: '100%', marginTop: '1rem', position: 'relative' }}>
       <div className={styles.dashboardActions}>
         <div className={styles.searchBar}>
           <Search size={20} className={styles.searchIcon} />
@@ -73,11 +153,12 @@ export default function RecipeDashboard({ initialRecipes, allTags }: Props) {
         )}
       </div>
 
-      {filteredRecipes.length > 0 ? (
+      {recipes.length > 0 ? (
         <div className={styles.recipeGrid}>
-          {filteredRecipes.map((recipe) => (
+          {recipes.map((recipe, index) => (
             <div 
               key={recipe.id} 
+              ref={index === recipes.length - 1 ? lastRecipeRef : null}
               className={styles.recipeCard}
               onClick={() => router.push(`/recipes/${recipe.id}`)}
             >
@@ -124,7 +205,7 @@ export default function RecipeDashboard({ initialRecipes, allTags }: Props) {
             </div>
           ))}
         </div>
-      ) : (
+      ) : !loading && (
         <div className={styles.emptyState}>
           <UtensilsCrossed size={48} color="var(--border-color)" style={{ marginBottom: '1.5rem' }} />
           <h3 className={styles.emptyTitle}>
@@ -135,6 +216,22 @@ export default function RecipeDashboard({ initialRecipes, allTags }: Props) {
           </p>
         </div>
       )}
+
+      {loading && (
+        <div className={styles.loadingMore}>
+          <Loader2 size={24} className={styles.spinner} />
+          <span>読み込み中...</span>
+        </div>
+      )}
+
+      {/* トップに戻るボタン */}
+      <button 
+        className={`${styles.scrollTopButton} ${showScrollTop ? styles.scrollTopVisible : ''}`}
+        onClick={scrollToTop}
+        aria-label="トップに戻る"
+      >
+        <ArrowUp size={24} />
+      </button>
     </div>
   )
 }
