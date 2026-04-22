@@ -39,7 +39,7 @@ export default function RecipeDashboard({ initialRecipes, allTags }: Props) {
   }, [initialRecipes, search, selectedTag])
 
   return (
-    <div style={{ width: '100%', marginTop: '4rem' }}>
+    <div style={{ width: '100%', marginTop: '1rem' }}>
       <div className={styles.dashboardActions}>
         <div className={styles.searchBar}>
           <Search size={20} className={styles.searchIcon} />
@@ -118,7 +118,7 @@ export default function RecipeDashboard({ initialRecipes, allTags }: Props) {
                 </div>
                 <div className={styles.recipeMeta}>
                   <span>{recipe.base_servings ? `${recipe.base_servings}人分` : '分量不明'}</span>
-                  <span>{new Date(recipe.created_at).toLocaleDateString()}</span>
+                  <span style={{ opacity: 0.7 }}>{new Date(recipe.created_at).toLocaleDateString()}</span>
                 </div>
               </div>
             </div>
@@ -126,11 +126,11 @@ export default function RecipeDashboard({ initialRecipes, allTags }: Props) {
         </div>
       ) : (
         <div className={styles.emptyState}>
-          <UtensilsCrossed size={48} color="var(--border-color)" style={{ marginBottom: '1rem' }} />
+          <UtensilsCrossed size={48} color="var(--border-color)" style={{ marginBottom: '1.5rem' }} />
           <h3 className={styles.emptyTitle}>
             {search || selectedTag ? '条件に合うレシピが見つかりません' : 'まだレシピがありません'}
           </h3>
-          <p className={styles.textSecondary}>
+          <p style={{ color: 'var(--text-secondary)' }}>
             {search || selectedTag ? '検索条件を変えてみてください。' : '「レシピを追加」ボタンから最初のレシピを登録しましょう。'}
           </p>
         </div>

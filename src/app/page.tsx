@@ -7,17 +7,9 @@ import RecipeDashboard from "@/components/RecipeDashboard";
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <div className={styles.landing}>
-        <h1 className={styles.title}>Recipe Auto-Importer</h1>
-        <p className={styles.description}>
-          テキストを貼り付けるだけで、AIがレシピを構造化して保存します。
-          毎日の料理をよりスマートで効率的に。
-        </p>
-
-        <AuthBoundContent />
-      </div>
-    </main>
+    <div className="container">
+      <AuthBoundContent />
+    </div>
   );
 }
 
@@ -27,10 +19,21 @@ async function AuthBoundContent() {
 
   if (!user) {
     return (
-      <div className={styles.buttonContainer}>
-        <Link href="/auth/login" className={styles.primaryButton}>
-          はじめる
-        </Link>
+      <div className={styles.landing}>
+        <div className={styles.heroBadge}>AI Recipe Manager</div>
+        <h1 className={styles.heroTitle}>
+          お気に入りのレシピを<br />
+          <span className="gradient-text">一瞬で「自分のもの」に。</span>
+        </h1>
+        <p className={styles.heroDescription}>
+          URLを貼るだけで、AIが分量や手順をスマートに整理。<br />
+          人数に合わせた自動計算も、スマホひとつで。
+        </p>
+        <div className={styles.heroActions}>
+          <Link href="/auth/login" className={styles.primaryButton}>
+            今すぐはじめる
+          </Link>
+        </div>
       </div>
     );
   }
@@ -55,20 +58,15 @@ async function AuthBoundContent() {
   const allTags = Array.from(new Set((tagsData || []).map(t => t.name)));
 
   return (
-    <div style={{ width: '100%', marginTop: '2rem' }}>
+    <div className={styles.dashboardContainer}>
       <div className={styles.dashboardHeader}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 700 }}>マイレシピ</h2>
-        <div className={styles.userActions}>
-          <Link href="/import" className={styles.primaryButton}>
-            <Plus size={18} /> レシピを追加
-          </Link>
-          <form action={logout}>
-            <button type="submit" className={styles.secondaryButton}>
-              <LogOut size={16} style={{ marginRight: '4px', verticalAlign: 'middle' }} />
-              ログアウト
-            </button>
-          </form>
-        </div>
+        <h2 className={styles.sectionTitle}>マイレシピ</h2>
+        <form action={logout}>
+          <button type="submit" className={styles.secondaryButton}>
+            <LogOut size={16} /> 
+            <span>ログアウト</span>
+          </button>
+        </form>
       </div>
 
       <RecipeDashboard 

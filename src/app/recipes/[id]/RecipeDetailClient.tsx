@@ -5,8 +5,7 @@ import styles from './recipe-detail.module.css'
 import { scaleAmount, formatIngredientAmount } from '@/utils/recipe-utils'
 import { 
   Utensils, 
-  ListChecks, 
-  Users
+  ListChecks 
 } from "lucide-react";
 
 interface Props {
@@ -21,16 +20,15 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: Props) {
   const servingOptions = [1, 2, 3, 4]
 
   return (
-    <div className={styles.contentGrid}>
+    <div className={styles.infoGrid}>
       <section>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
-            <Utensils size={24} color="var(--primary-color)" />
+          <h2 className={styles.sectionTitle}>
+            <Utensils size={20} />
             材料
           </h2>
           
           <div className={styles.servingsSelector}>
-            <Users size={16} />
             {servingOptions.map(num => (
               <button 
                 key={num}
@@ -40,7 +38,7 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: Props) {
                 {num}
               </button>
             ))}
-            <span>人分</span>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, marginRight: '0.5rem' }}>人分</span>
           </div>
         </div>
 
@@ -49,7 +47,7 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: Props) {
             const scaled = scaleAmount(ing.amount_value, recipe.base_servings, targetServings)
             return (
               <div key={ing.id} className={styles.ingredientItem}>
-                <span style={{ fontWeight: 500 }}>{ing.name}</span>
+                <span className={styles.ingredientName}>{ing.name}</span>
                 <span className={styles.ingredientAmount}>
                   {formatIngredientAmount(scaled, ing.unit, ing.original_text, recipe.base_servings, targetServings)}
                 </span>
@@ -61,7 +59,7 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: Props) {
 
       <section>
         <h2 className={styles.sectionTitle}>
-          <ListChecks size={24} color="var(--primary-color)" />
+          <ListChecks size={20} />
           手順
         </h2>
         <div className={styles.stepList}>
@@ -74,5 +72,5 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: Props) {
         </div>
       </section>
     </div>
-  )
+  );
 }

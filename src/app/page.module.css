@@ -1,19 +1,126 @@
-.main {
-  min-height: 100vh;
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+.landing {
+  padding: 6rem 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
 }
 
-.title {
-  font-size: 2.5rem;
+.heroBadge {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--primary-color);
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  font-size: clamp(2.5rem, 8vw, 4rem);
   font-weight: 800;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, var(--primary-color), #a855f7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.04em;
 }
 
+.heroDescription {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin-bottom: 3rem;
+}
+
+.heroActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.dashboardContainer {
+  padding: 2rem 0;
+}
+
+.dashboardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.primaryButton {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.8rem 2rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+}
+
+.primaryButton:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.5);
+}
+
+.secondaryButton {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.6rem 1.2rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.secondaryButton:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+  
+  .heroDescription {
+    font-size: 1.125rem;
+  }
+  
+  .dashboardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .secondaryButton span {
+    display: none;
+  }
+  
+  .secondaryButton {
+    padding: 0.6rem;
+    width: 38px;
+    height: 38px;
+    justify-content: center;
+  }
+}
+
+/* Dashboard UI Components */
 .dashboardActions {
   display: flex;
   flex-direction: column;
@@ -24,15 +131,15 @@
 .searchBar {
   position: relative;
   width: 100%;
-  max-width: 600px;
+  max-width: 500px;
 }
 
 .searchIcon {
   position: absolute;
-  left: 1rem;
+  left: 1.25rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-secondary);
+  color: var(--text-muted);
   pointer-events: none;
 }
 
@@ -41,59 +148,68 @@
   background-color: var(--surface-color);
   border: 1px solid var(--border-color);
   border-radius: 9999px;
-  padding: 0.8rem 1rem 0.8rem 3rem;
+  padding: 0.8rem 1rem 0.8rem 3.25rem;
   color: var(--text-primary);
   font-size: 1rem;
-  transition: all var(--transition-speed);
+  transition: var(--transition);
 }
 
 .searchInput:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  background-color: var(--surface-hover);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
 }
 
 .tagFilter {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.tagFilter::-webkit-scrollbar {
+  display: none;
 }
 
 .tagButton {
   background-color: var(--surface-color);
   border: 1px solid var(--border-color);
-  padding: 0.4rem 1rem;
-  border-radius: 2rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-secondary);
-  cursor: pointer;
-  transition: all var(--transition-speed);
+  white-space: nowrap;
 }
 
 .tagButton:hover {
-  border-color: var(--primary-color);
-  color: var(--primary-color);
+  border-color: var(--text-muted);
+  color: var(--text-primary);
 }
 
 .activeTag {
   background-color: var(--primary-color);
   border-color: var(--primary-color);
   color: white !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
+/* Recipe Grid & Cards */
 .recipeGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
 }
 
 .recipeCard {
   background-color: var(--surface-color);
   border: 1px solid var(--border-color);
-  border-radius: 1rem;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  transition: all var(--transition-speed);
+  transition: var(--transition);
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -102,15 +218,14 @@
 .recipeCard:hover {
   transform: translateY(-4px);
   border-color: var(--primary-color);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg);
 }
 
 .recipeImageWrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
-  background-color: var(--bg-color);
-  border-bottom: 1px solid var(--border-color);
+  aspect-ratio: 4 / 3;
+  background-color: #1a1f2e;
 }
 
 .recipeThumbnail {
@@ -125,30 +240,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--text-muted);
 }
 
 .sourceLink {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  background-color: rgba(0, 0, 0, 0.6);
+  top: 0.75rem;
+  right: 0.75rem;
+  background-color: rgba(0, 0, 0, 0.5);
   color: white;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(4px);
-  transition: transform 0.2s;
-}
-
-.sourceLink:hover {
-  transform: scale(1.1);
+  backdrop-filter: blur(8px);
+  z-index: 10;
 }
 
 .recipeInfo {
-  padding: 1.25rem;
+  padding: 1.5rem;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -164,78 +276,47 @@
 .recipeCardTags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-bottom: 1rem;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .miniTag {
   font-size: 0.75rem;
-  color: var(--primary-color);
+  font-weight: 700;
+  color: var(--accent-color);
   background-color: rgba(99, 102, 241, 0.1);
-  padding: 0.1rem 0.5rem;
-  border-radius: 4px;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
 }
 
 .recipeMeta {
-  color: var(--text-secondary);
-  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
 }
 
 .emptyState {
   text-align: center;
-  padding: 5rem 2rem;
+  padding: 6rem 2rem;
   background-color: var(--surface-color);
-  border-radius: 1.5rem;
+  border-radius: var(--radius-xl);
   border: 2px dashed var(--border-color);
 }
 
 .emptyTitle {
   font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
-.landing {
-  height: 80vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.primaryButton {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all var(--transition-speed);
-}
-
-.primaryButton:hover {
-  background-color: var(--primary-hover);
-  transform: translateY(-2px);
-}
-
-.secondaryButton {
-  background-color: transparent;
-  color: var(--text-secondary);
-  border: 1px solid var(--border-color);
-  padding: 0.6rem 1.2rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  transition: all var(--transition-speed);
-}
-
-.secondaryButton:hover {
-  background-color: var(--surface-color);
-  color: var(--text-primary);
+@media (max-width: 640px) {
+  .recipeGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 }
