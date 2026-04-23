@@ -131,13 +131,10 @@ export default function RecipeDashboard({
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-      {/* Greeting & Meta */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-ink-900 mb-1">
-          こんにちは{userName ? `、${userName}さん` : ''} 🍳
-        </h1>
-        <p className="text-sm text-ink-500">
-          登録レシピ {total} 件
+      {/* Meta & Search */}
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <p className="text-sm text-ink-500 font-bold">
+          全 {total} 件のレシピ
         </p>
       </div>
 

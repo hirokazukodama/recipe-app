@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { Plus, ChefHat } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
+import { logout } from '@/app/auth/actions'
 
 export default function Header({ initialUser }: { initialUser: any }) {
   const pathname = usePathname()
@@ -49,11 +50,16 @@ export default function Header({ initialUser }: { initialUser: any }) {
                   <span className="hidden xs:inline">追加</span>
                 </Link>
               )}
-              <button className="w-9 h-9 rounded-full bg-white ring-1 ring-line flex place-items-center justify-center shadow-soft shrink-0">
+              <form action={logout}>
+                <button type="submit" className="h-9 px-3 rounded-full bg-white ring-1 ring-line text-sm font-bold text-ink-700 hover:bg-cream-100 flex place-items-center justify-center shadow-soft shrink-0 transition" title="ログアウト">
+                  ログアウト
+                </button>
+              </form>
+              <div className="w-9 h-9 rounded-full bg-cream-100 ring-1 ring-line flex place-items-center justify-center shadow-soft shrink-0">
                 <span className="text-[11px] font-bold text-ink-700">
                   {user.email ? user.email.charAt(0).toUpperCase() : 'U'}
                 </span>
-              </button>
+              </div>
             </>
           ) : (
             <div className="flex items-center gap-2 sm:gap-4">

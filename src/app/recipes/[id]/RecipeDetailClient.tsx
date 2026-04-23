@@ -123,7 +123,7 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: { recipe: an
         <nav className="pt-6">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-sm text-ink-500 hover:text-ink-900 transition"
+            className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-white ring-1 ring-line text-sm font-bold text-ink-700 hover:bg-cream-100 transition shadow-soft"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>一覧へ戻る</span>
