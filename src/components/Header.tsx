@@ -38,7 +38,7 @@ export default function Header({ initialUser }: { initialUser: any }) {
         </Link>
         
         <div className="flex items-center gap-3 sm:gap-4">
-          {user ? (
+          {user && (
             <>
               {!shouldHideAddButton && (
                 <Link
@@ -55,21 +55,7 @@ export default function Header({ initialUser }: { initialUser: any }) {
                   ログアウト
                 </button>
               </form>
-              <div className="w-9 h-9 rounded-full bg-cream-100 ring-1 ring-line flex place-items-center justify-center shadow-soft shrink-0">
-                <span className="text-[11px] font-bold text-ink-700">
-                  {user.email ? user.email.charAt(0).toUpperCase() : 'U'}
-                </span>
-              </div>
             </>
-          ) : (
-            <div className="flex items-center gap-2 sm:gap-4">
-              <Link href="/auth/login" className="text-sm font-bold text-ink-700 hover:text-ink-900 px-2 sm:px-3 py-2 transition shrink-0">
-                ログイン
-              </Link>
-              <Link href="/auth/signup" className="h-9 px-4 inline-flex items-center justify-center rounded-full bg-ink-900 text-white text-sm font-bold hover:bg-ink-700 transition shadow-soft shrink-0 whitespace-nowrap">
-                無料で始める
-              </Link>
-            </div>
           )}
         </div>
       </div>
