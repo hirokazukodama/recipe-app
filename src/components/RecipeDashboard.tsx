@@ -193,9 +193,14 @@ export default function RecipeDashboard({
               <div className={styles.recipeInfo}>
                 <h3 className={styles.recipeTitle}>{recipe.title}</h3>
                 <div className={styles.recipeCardTags}>
-                  {recipe.recipe_tags?.map(rt => (
+                  {recipe.recipe_tags?.slice(0, 3).map(rt => (
                     <span key={rt.tags.id} className={styles.miniTag}>#{rt.tags.name}</span>
                   ))}
+                  {recipe.recipe_tags && recipe.recipe_tags.length > 3 && (
+                    <span className={styles.miniTag} style={{ opacity: 0.6 }}>
+                      +{recipe.recipe_tags.length - 3}
+                    </span>
+                  )}
                 </div>
                 <div className={styles.recipeMeta}>
                   <span>{recipe.base_servings ? `${recipe.base_servings}人分` : '分量不明'}</span>

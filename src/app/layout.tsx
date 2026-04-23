@@ -1,10 +1,18 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
 
 import Header from "@/components/Header";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ 
+  subsets: ["latin"],
+  variable: '--font-inter',
+});
+
+const notoSerif = Noto_Serif_JP({
+  subsets: ["latin"],
+  weight: ['700', '900'],
+  variable: '--font-noto-serif',
+});
 
 export const metadata: Metadata = {
   title: "Recipe Auto-Importer",
@@ -35,9 +43,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${notoSerif.variable} antialiased`}>
         <Header />
-        <main style={{ minHeight: 'calc(100vh - 64px)' }}>
+        <main style={{ minHeight: 'calc(100vh - 72px)' }}>
           {children}
         </main>
       </body>

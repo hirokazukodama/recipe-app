@@ -24,7 +24,7 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: Props) {
       <section>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>
-            <Utensils size={20} />
+            <Utensils size={24} strokeWidth={2.5} />
             材料
           </h2>
           
@@ -38,7 +38,7 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: Props) {
                 {num}
               </button>
             ))}
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, marginRight: '0.5rem' }}>人分</span>
+            <span style={{ fontSize: '0.8125rem', fontWeight: 800, marginRight: '0.75rem', color: 'var(--text-secondary)' }}>人分</span>
           </div>
         </div>
 
@@ -58,10 +58,12 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: Props) {
       </section>
 
       <section>
-        <h2 className={styles.sectionTitle}>
-          <ListChecks size={20} />
-          手順
-        </h2>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>
+            <ListChecks size={24} strokeWidth={2.5} />
+            手順
+          </h2>
+        </div>
         <div className={styles.stepList}>
           {sortedSteps.map((step: any) => (
             <div key={step.id} className={styles.stepItem}>

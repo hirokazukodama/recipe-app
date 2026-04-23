@@ -1,5 +1,5 @@
 .container {
-  padding: 2rem 0 6rem;
+  padding: 3rem 0 8rem;
   max-width: 1000px;
   margin: 0 auto;
 }
@@ -8,39 +8,46 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 3rem;
-  padding-bottom: 1.5rem;
+  margin-bottom: 4rem;
+  padding-bottom: 2rem;
   border-bottom: 1px solid var(--border-color);
 }
 
+.headerTitleGroup {
+  display: flex;
+  flex-direction: column;
+}
+
 .headerTitle {
-  font-size: 1.75rem;
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
 }
 
 .headerActions {
   display: flex;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .saveButton {
   background-color: var(--primary-color);
   color: white;
-  padding: 0.75rem 1.75rem;
+  padding: 0.8rem 2rem;
   border-radius: 9999px;
-  font-weight: 700;
+  font-weight: 800;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   transition: var(--transition);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
 }
 
 .saveButton:hover:not(:disabled) {
   background-color: var(--primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
 }
 
 .saveButton:disabled {
@@ -49,13 +56,14 @@
 }
 
 .cancelButton {
-  padding: 0.75rem 1.5rem;
+  padding: 0.8rem 1.75rem;
   border-radius: 9999px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-secondary);
-  background: var(--surface-color);
+  background: white;
   border: 1px solid var(--border-color);
   transition: var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 
 .cancelButton:hover {
@@ -66,8 +74,8 @@
 
 .formGrid {
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 4rem;
+  grid-template-columns: 340px 1fr;
+  gap: 5rem;
   align-items: start;
 }
 
@@ -75,7 +83,7 @@
 .sidebar {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 3rem;
   position: sticky;
   top: 100px;
 }
@@ -83,17 +91,18 @@
 .imageSection {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .imageWrapper {
   width: 100%;
-  aspect-ratio: 1;
+  aspect-ratio: 3 / 2;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background-color: var(--surface-color);
+  background-color: #f0ede9;
   position: relative;
-  border: 2px dashed var(--border-color);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
   transition: var(--transition);
 }
 
@@ -124,14 +133,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
-  color: white;
+  background: rgba(255, 255, 255, 0.4);
+  color: var(--text-primary);
   opacity: 0;
   cursor: pointer;
   transition: var(--transition);
-  font-weight: 700;
-  gap: 0.5rem;
-  backdrop-filter: blur(4px);
+  font-weight: 800;
+  gap: 0.6rem;
+  backdrop-filter: blur(6px);
 }
 
 .imageWrapper:hover .imageUploadLabel {
@@ -141,7 +150,7 @@
 .imageOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(12, 17, 29, 0.8);
+  background: rgba(255, 255, 255, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -151,34 +160,35 @@
 .tagSection {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
 }
 
 .tagLabel {
-  font-size: 1.125rem;
-  font-weight: 700;
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 800;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  color: var(--text-primary);
 }
 
 .tagList {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
 .tag {
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(96, 108, 56, 0.08);
   color: var(--accent-color);
-  padding: 0.4rem 0.75rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 8px;
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: 800;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid rgba(99, 102, 241, 0.2);
 }
 
 .removeTagButton {
@@ -190,22 +200,23 @@
 }
 
 .removeTagButton:hover {
-  color: #ef4444;
+  color: var(--error-color);
 }
 
 .tagInputWrapper {
   display: flex;
   width: 100%;
   margin-top: 0.5rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .tagInput {
   flex: 1;
-  background: var(--surface-color);
+  background: white;
   border: 1px solid var(--border-color);
-  border-radius: 8px 0 0 8px;
-  padding: 0.6rem 1rem;
-  font-size: 0.875rem;
+  border-radius: 10px 0 0 10px;
+  padding: 0.7rem 1.2rem;
+  font-size: 0.9375rem;
   color: var(--text-primary);
 }
 
@@ -213,8 +224,8 @@
   background: var(--surface-hover);
   border: 1px solid var(--border-color);
   border-left: none;
-  border-radius: 0 8px 8px 0;
-  padding: 0 0.75rem;
+  border-radius: 0 10px 10px 0;
+  padding: 0 1rem;
   color: var(--text-secondary);
 }
 
@@ -222,78 +233,83 @@
 .mainForm {
   display: flex;
   flex-direction: column;
-  gap: 3.5rem;
+  gap: 4.5rem;
 }
 
 .formSection {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
 .sectionHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 1rem;
+  padding-bottom: 1.25rem;
   border-bottom: 1px solid var(--border-color);
 }
 
 .sectionTitle {
-  font-size: 1.5rem;
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
   font-weight: 800;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
+  color: var(--text-primary);
 }
 
 .fieldGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.8rem;
 }
 
 .fieldLabel {
-  font-size: 0.875rem;
-  font-weight: 700;
+  font-size: 0.9375rem;
+  font-weight: 800;
   color: var(--text-secondary);
+  letter-spacing: 0.02em;
 }
 
 .inputFull {
   width: 100%;
-  background: var(--surface-color);
+  background: white;
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  padding: 1rem 1.25rem;
+  padding: 1.1rem 1.5rem;
   font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
   transition: var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 
 .inputFull:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
 }
 
 .servingsInputWrapper {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  background: var(--surface-color);
+  gap: 1.25rem;
+  background: white;
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  padding: 0.5rem 1.25rem;
+  padding: 0.6rem 1.5rem;
   width: fit-content;
+  box-shadow: var(--shadow-sm);
 }
 
 .servingsInput {
-  width: 50px;
+  width: 60px;
   background: transparent;
   border: none;
-  font-size: 1.125rem;
-  font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 800;
   color: var(--primary-color);
   text-align: center;
 }
@@ -306,29 +322,32 @@
 .editList {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .editItem {
   display: flex;
-  gap: 1rem;
+  gap: 1.25rem;
   align-items: center;
-  background: var(--surface-color);
-  padding: 0.75rem 1rem;
-  border-radius: 12px;
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
   border: 1px solid var(--border-color);
   transition: var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 
 .editItem:focus-within {
   border-color: var(--primary-color);
+  box-shadow: 0 4px 15px rgba(45, 36, 30, 0.05);
 }
 
 .editInputName {
   flex: 2;
   background: transparent;
   border: none;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.0625rem;
   color: var(--text-primary);
 }
 
@@ -336,11 +355,11 @@
   flex: 1;
   background: var(--surface-hover);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--accent-color);
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: var(--primary-color);
   text-align: right;
 }
 
@@ -350,25 +369,27 @@
 
 .editStepItem {
   display: flex;
-  gap: 1.25rem;
+  gap: 1.5rem;
   align-items: flex-start;
-  background: var(--surface-color);
-  padding: 1.5rem;
-  border-radius: 16px;
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
   border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
 }
 
 .stepNumber {
-  width: 32px;
-  height: 32px;
-  background: var(--primary-color);
-  color: white;
+  width: 36px;
+  height: 36px;
+  background: #fdf2f2;
+  color: var(--primary-color);
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
   flex-shrink: 0;
+  border: 1px solid rgba(255, 107, 107, 0.2);
 }
 
 .editTextarea {
@@ -376,9 +397,9 @@
   background: transparent;
   border: none;
   resize: vertical;
-  min-height: 80px;
-  font-size: 1rem;
-  line-height: 1.6;
+  min-height: 100px;
+  font-size: 1.125rem;
+  line-height: 1.8;
   color: var(--text-primary);
 }
 
@@ -387,38 +408,40 @@
 }
 
 .addButton {
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.5rem;
   border-radius: 9999px;
-  font-size: 0.8125rem;
-  font-weight: 700;
+  font-size: 0.875rem;
+  font-weight: 800;
   color: var(--primary-color);
-  background: rgba(99, 102, 241, 0.1);
+  background: #fdf2f2;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
   transition: var(--transition);
+  border: 1px solid rgba(255, 107, 107, 0.1);
 }
 
 .addButton:hover {
-  background: rgba(99, 102, 241, 0.2);
+  background: #feeaea;
+  transform: translateY(-1px);
 }
 
 .removeButton {
   color: var(--text-muted);
-  padding: 0.5rem;
+  padding: 0.6rem;
   border-radius: 50%;
   transition: var(--transition);
 }
 
 .removeButton:hover {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
+  background: #feeaea;
+  color: var(--error-color);
 }
 
 @media (max-width: 900px) {
   .formGrid {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 4rem;
   }
   
   .sidebar {
@@ -426,7 +449,7 @@
   }
   
   .imageWrapper {
-    max-width: 400px;
+    max-width: 500px;
   }
 }
 
@@ -434,7 +457,7 @@
   .header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.5rem;
+    gap: 2rem;
   }
   
   .headerActions {
@@ -453,5 +476,9 @@
   
   .editInputAmount {
     text-align: left;
+  }
+
+  .mainForm {
+    gap: 3.5rem;
   }
 }
