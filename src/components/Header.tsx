@@ -2,33 +2,69 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import styles from './header.module.css'
-import { Plus, LayoutGrid } from 'lucide-react'
+import { Plus, ChefHat } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { createClient } from '@/utils/supabase/client'
 
 export default function Header() {
   const pathname = usePathname()
+  const [user, setUser] = useState<any>(null)
+  const supabase = createClient()
 
-  // レシピ追加ボタンを表示しない条件
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null)
+    })
+    
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
   const shouldHideAddButton = 
     pathname.startsWith('/auth/') || 
     pathname.startsWith('/import') || 
     pathname.startsWith('/recipes/')
 
   return (
-    <header className={styles.header}>
-      <div className={`${styles.content} container`}>
-        <Link href="/" className={styles.logo}>
-          <div className={styles.logoIcon}>
-            <LayoutGrid size={20} />
-          </div>
-          <span className={styles.logoText}>Recipe AI</span>
+    <header className="sticky top-0 z-30 bg-cream-50/80 backdrop-blur border-b border-line">
+      <div className="max-w-5xl mx-auto h-14 px-4 sm:px-6 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2">
+          <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-coral-500 to-coral-700 flex place-items-center justify-center text-white shadow-soft">
+            <ChefHat className="w-4 h-4" />
+          </span>
+          <span className="text-[15px] font-semibold tracking-tight text-ink-900">Recipe AI</span>
         </Link>
-        <div className={styles.actions}>
-          {!shouldHideAddButton && (
-            <Link href="/import" className={styles.addButton}>
-              <Plus size={18} />
-              <span>レシピを追加</span>
-            </Link>
+        
+        <div className="flex items-center gap-2">
+          {user ? (
+            <>
+              {!shouldHideAddButton && (
+                <Link
+                  href="/import"
+                  className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-coral-500 hover:bg-coral-600 text-white text-sm font-medium shadow-cta transition"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>レシピを追加</span>
+                </Link>
+              )}
+              <button className="w-9 h-9 rounded-full bg-white ring-1 ring-line flex place-items-center justify-center">
+                <span className="text-[11px] font-semibold text-ink-700">
+                  {user.email ? user.email.charAt(0).toUpperCase() : 'U'}
+                </span>
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/auth/login" className="text-sm font-medium text-ink-700 hover:text-ink-900 px-3 py-2 transition">
+                ログイン
+              </Link>
+              <Link href="/auth/signup" className="h-9 px-4 inline-flex items-center justify-center rounded-full bg-ink-900 text-white text-sm font-medium hover:bg-ink-700 transition">
+                無料で始める
+              </Link>
+            </>
           )}
         </div>
       </div>

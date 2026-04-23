@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Noto_Serif_JP } from "next/font/google";
+import { Inter, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 
 import Header from "@/components/Header";
@@ -7,12 +7,14 @@ import Header from "@/components/Header";
 const inter = Inter({ 
   subsets: ["latin"],
   variable: '--font-inter',
+  display: 'swap',
 });
 
-const notoSerif = Noto_Serif_JP({
+const noto = Noto_Sans_JP({
   subsets: ["latin"],
-  weight: ['700', '900'],
-  variable: '--font-noto-serif',
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-noto',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -43,10 +45,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
-      <body className={`${inter.variable} ${notoSerif.variable} antialiased`}>
+    <html lang="ja" className={`${inter.variable} ${noto.variable}`}>
+      <body className="font-sans bg-cream-50 text-ink-900 antialiased">
         <Header />
-        <main style={{ minHeight: 'calc(100vh - 72px)' }}>
+        <main className="min-h-[calc(100vh-56px)]">
           {children}
         </main>
       </body>

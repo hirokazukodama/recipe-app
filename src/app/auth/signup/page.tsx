@@ -3,72 +3,104 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { signup } from '../actions'
-import styles from '../auth.module.css'
+import { AlertCircle, Eye, EyeOff, ChefHat, Loader2, PartyPopper } from 'lucide-react'
 
 export default function SignupPage() {
   const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   async function handleSubmit(formData: FormData) {
     setLoading(true)
     setError(null)
-    setSuccess(null)
     const result = await signup(formData)
-    
     if (result?.error) {
       setError(result.error)
-      setLoading(false)
-    } else if (result?.success) {
-      setSuccess(result.success)
       setLoading(false)
     }
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <h1 className={styles.title}>Create Account</h1>
-        <p className={styles.subtitle}>
-          新しいアカウントを作成して、あなたのオリジナル料理帳を作りましょう。
-        </p>
+    <div className="min-h-[calc(100vh-56px)] flex items-center justify-center py-12 px-4 sm:px-6 relative overflow-hidden bg-cream-50">
+      {/* Background Effect */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-coral-100/40 blur-[120px]" />
+        <div className="absolute top-[60%] -right-[10%] w-[40%] h-[60%] rounded-full bg-forest-100/30 blur-[120px]" />
+      </div>
 
-        {error && <div className={styles.error}>{error}</div>}
-        {success && <div className={styles.success}>{success}</div>}
+      <div className="w-full max-w-[380px] relative z-10 space-y-8">
+        <div className="text-center space-y-3">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-coral-500 to-coral-700 shadow-soft flex items-center justify-center text-white">
+            <PartyPopper className="w-7 h-7" />
+          </div>
+          <h1 className="text-[28px] font-black tracking-tight text-ink-900">はじめまして</h1>
+          <p className="text-[15px] text-ink-500">アカウントを作成して、あなただけの<br/>レシピコレクションを作りましょう</p>
+        </div>
 
-        {!success && (
-          <form action={handleSubmit} className={styles.form}>
-            <div className={styles.inputGroup}>
-              <label htmlFor="email" className={styles.label}>メールアドレス</label>
+        <div className="bg-white/80 backdrop-blur-xl ring-1 ring-white/50 border border-line rounded-3xl p-6 sm:p-8 shadow-soft">
+          {error && (
+            <div className="mb-6 flex items-start gap-2 p-3 rounded-xl bg-red-50 text-red-600 ring-1 ring-red-100 text-sm">
+              <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+
+          <form action={handleSubmit} className="space-y-5">
+            <div className="space-y-1.5">
+              <label htmlFor="email" className="block text-[13px] font-semibold text-ink-700">
+                メールアドレス
+              </label>
               <input
                 id="email"
                 name="email"
                 type="email"
                 required
                 placeholder="you@example.com"
-                className={styles.input}
-              />
-            </div>
-            <div className={styles.inputGroup}>
-              <label htmlFor="password" className={styles.label}>パスワード</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className={styles.input}
+                className="w-full h-12 px-4 rounded-xl bg-white ring-1 ring-line focus:outline-none focus:ring-2 focus:ring-coral-500 transition text-[15px] placeholder:text-ink-300"
               />
             </div>
 
-            <button type="submit" className={styles.button} disabled={loading}>
-              {loading ? '登録中...' : 'アカウント作成'}
+            <div className="space-y-1.5 relative">
+              <label htmlFor="password" className="block text-[13px] font-semibold text-ink-700">
+                パスワード
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  placeholder="6文字以上の英数字"
+                  minLength={6}
+                  className="w-full h-12 pl-4 pr-11 rounded-xl bg-white ring-1 ring-line focus:outline-none focus:ring-2 focus:ring-coral-500 transition text-[15px] placeholder:text-ink-300"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-ink-300 hover:text-ink-500 transition"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="w-full h-12 mt-2 rounded-xl bg-ink-900 hover:bg-ink-800 text-white font-semibold transition shadow-cta flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+              <span>{loading ? '登録中...' : '無料でアカウント作成'}</span>
             </button>
           </form>
-        )}
 
-        <div className={styles.linkContainer}>
-          すでにアカウントをお持ちですか？
-          <Link href="/auth/login" className={styles.link}>ログイン</Link>
+          <div className="mt-8 text-center text-[14px] text-ink-500">
+            すでにアカウントをお持ちですか？{' '}
+            <Link href="/auth/login" className="font-semibold text-coral-600 hover:text-coral-700 transition">
+              ログイン
+            </Link>
+          </div>
         </div>
       </div>
     </div>

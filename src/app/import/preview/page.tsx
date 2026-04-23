@@ -1,12 +1,34 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { saveRecipe } from '@/actions/recipe'
 import { createClient } from '@/utils/supabase/client'
-import { scaleAmount, formatIngredientAmount } from '@/utils/recipe-utils'
-import styles from './preview.module.css'
-import { Utensils, ListChecks, Check, X, Tag, Camera, Plus, Users } from 'lucide-react'
+import { Utensils, ListChecks, Check, X, Tag, Camera, Plus, ArrowLeft, Loader2, Play } from 'lucide-react'
+
+// RecipeDetailClientと同じ端数丸めロジックをプレビューでも使用
+function prettyAmount(v: number | null): string {
+  if (v === null) return "適量";
+  if (v < 0.1) return "少々";
+  const fractions: [number, string][] = [
+    [1 / 8, "1/8"], [1 / 6, "1/6"], [1 / 4, "1/4"], [1 / 3, "1/3"],
+    [1 / 2, "1/2"], [2 / 3, "2/3"], [3 / 4, "3/4"],
+  ];
+  const int = Math.floor(v);
+  const frac = v - int;
+  if (frac > 0.02 && frac < 0.98) {
+    let best: string | null = null;
+    let bestDiff = Infinity;
+    for (const [f, s] of fractions) {
+      const d = Math.abs(frac - f);
+      if (d < bestDiff) { bestDiff = d; best = s; }
+    }
+    if (bestDiff < 0.06 && best) {
+      return int > 0 ? `${int}と${best}` : best;
+    }
+  }
+  return (Math.round(v * 10) / 10).toString();
+}
 
 export default function PreviewPage() {
   const [recipe, setRecipe] = useState<any>(null)
@@ -14,7 +36,6 @@ export default function PreviewPage() {
   const [tagInput, setTagInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
-  const [targetServings, setTargetServings] = useState(1)
   const router = useRouter()
   const supabase = createClient()
 
@@ -23,9 +44,6 @@ export default function PreviewPage() {
     if (data) {
       const parsed = JSON.parse(data)
       setRecipe(parsed)
-      // 元の人数がわかればそれをデフォルトにする、そうでなければ1人分
-      setTargetServings(parsed.base_servings || 1)
-      // AIが提案したタグがあればセット
       if (parsed.tags && Array.isArray(parsed.tags)) {
         setTags(parsed.tags)
       }
@@ -38,7 +56,6 @@ export default function PreviewPage() {
     if (!recipe) return
     setLoading(true)
     try {
-      // タグをデータに含めて保存
       await saveRecipe({ ...recipe, tags })
       localStorage.removeItem('temp_extracted_recipe')
     } catch (error) {
@@ -64,9 +81,6 @@ export default function PreviewPage() {
         .upload(fileName, file)
 
       if (uploadError) throw uploadError
-
-      // 公開URLを取得（バケットがパブリックでない場合は署名付きURLが必要だが、今回はパスを保存）
-      // SPEC通りに image_url に保存
       setRecipe({ ...recipe, image_url: data.path })
     } catch (error: any) {
       console.error('Upload error:', error)
@@ -89,140 +103,140 @@ export default function PreviewPage() {
 
   if (!recipe) return null
 
+  const imageUrl = recipe.image_url?.startsWith('https') 
+    ? recipe.image_url 
+    : recipe.image_url ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/recipes/${recipe.image_url}` : null;
+
   return (
-    <div className="container">
-      <div className={styles.container}>
-        <header className={styles.header}>
-          <div className={styles.headerTop}>
-            <div className={styles.titleGroup}>
-              <h1 className={styles.title}>{recipe.title}</h1>
-              <div className={styles.servings}>
-                {recipe.base_servings && <span>{recipe.base_servings}人分</span>}
-                {recipe.source_url && (
-                  <span className={styles.sourceLabel}>
-                    （{new URL(recipe.source_url).hostname}）
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className={styles.actions}>
-              <button className={styles.cancelButton} onClick={() => router.back()}>
-                キャンセル
-              </button>
-              <button 
-                className={styles.saveButton} 
-                onClick={handleSave}
-                disabled={loading || uploading}
-              >
-                {loading ? '保存中...' : 'レシピを保存'}
-              </button>
-            </div>
-          </div>
+    <div className="min-h-[calc(100vh-56px)] bg-cream-50 text-ink-900 pb-32">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+        
+        {/* Header Actions */}
+        <div className="py-6 flex items-center justify-between sticky top-14 z-20 bg-cream-50/90 backdrop-blur border-b border-line mb-6">
+          <button 
+            onClick={() => router.back()}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-500 hover:text-ink-900 transition"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>修正してやり直す</span>
+          </button>
+          <button 
+            onClick={handleSave}
+            disabled={loading || uploading}
+            className={`h-10 px-6 rounded-full text-sm font-semibold transition shadow-cta flex items-center gap-2 ${loading || uploading ? 'bg-coral-300 text-white cursor-not-allowed' : 'bg-coral-500 hover:bg-coral-600 text-white'}`}
+          >
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+            <span>{loading ? '保存中...' : 'この内容で保存する'}</span>
+          </button>
+        </div>
 
-          <div className={styles.headerBottom}>
-            <div className={styles.imageSection}>
-              <div className={styles.imageWrapper}>
-                {recipe.image_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img 
-                    src={recipe.image_url.startsWith('https') 
-                      ? recipe.image_url 
-                      : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/recipes/${recipe.image_url}`} 
-                    alt={recipe.title} 
-                    className={styles.recipeImage}
-                  />
-                ) : (
-                  <div className={styles.imagePlaceholder}>
-                    <Camera size={32} />
-                    <span>画像なし</span>
-                  </div>
-                )}
-                {uploading && <div className={styles.imageOverlay}>アップロード中...</div>}
-                <label className={styles.imageUploadLabel}>
-                  <Camera size={14} />
-                  変更
-                  <input type="file" accept="image/*" onChange={handleImageUpload} hidden />
-                </label>
-              </div>
+        {/* Hero Preview */}
+        <section className="grid md:grid-cols-[minmax(0,1fr)_340px] gap-6 md:gap-8 items-start">
+          <div className="space-y-4">
+            <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-cream-200 ring-1 ring-line">
+              {imageUrl ? (
+                <img src={imageUrl} alt={recipe.title} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center text-ink-500">
+                  <Camera className="w-8 h-8 opacity-50 mb-2" />
+                  <span className="text-sm font-medium">画像がありません</span>
+                </div>
+              )}
+              {uploading && (
+                <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center text-white">
+                  <Loader2 className="w-8 h-8 animate-spin" />
+                </div>
+              )}
+              <label className="absolute bottom-4 right-4 h-10 px-4 rounded-full bg-white/90 backdrop-blur shadow-soft flex items-center gap-2 text-sm font-medium text-ink-900 cursor-pointer hover:bg-white transition">
+                <Camera className="w-4 h-4" />
+                <span>画像を変更</span>
+                <input type="file" accept="image/*" onChange={handleImageUpload} hidden />
+              </label>
             </div>
-
-            <div className={styles.tagSection}>
-              <h3 className={styles.tagLabel}>
-                <Tag size={14} />
-                タグを編集
+            
+            <div className="bg-white ring-1 ring-line rounded-2xl p-5 space-y-4">
+              <h3 className="text-sm font-bold text-ink-900 flex items-center gap-2">
+                <Tag className="w-4 h-4 text-forest-500" />
+                <span>タグを編集</span>
               </h3>
-              <div className={styles.tagList}>
+              <div className="flex flex-wrap gap-2">
                 {tags.map(tag => (
-                  <span key={tag} className={styles.tag}>
+                  <span key={tag} className="inline-flex items-center gap-1 pl-3 pr-1 py-1 rounded-full bg-cream-50 ring-1 ring-line text-[13px] text-ink-900">
                     #{tag}
-                    <button onClick={() => removeTag(tag)}><X size={12} /></button>
+                    <button onClick={() => removeTag(tag)} className="w-5 h-5 rounded-full hover:bg-cream-200 flex items-center justify-center text-ink-500 transition">
+                      <X className="w-3 h-3" />
+                    </button>
                   </span>
                 ))}
-                <div className={styles.tagInputWrapper}>
+                <div className="flex-1 min-w-[120px] flex items-center gap-2 px-3 py-1 rounded-full bg-cream-50 ring-1 ring-line focus-within:ring-coral-500 focus-within:bg-white transition">
                   <input 
                     type="text" 
                     value={tagInput}
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && addTag()}
-                    placeholder="タグ追加..."
+                    placeholder="新しいタグ..."
+                    className="w-full bg-transparent border-none focus:outline-none text-[13px]"
                   />
-                  <button onClick={addTag}><Plus size={14} /></button>
+                  <button onClick={addTag} className="text-ink-500 hover:text-coral-500">
+                    <Plus className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-        </header>
 
-        <div className={styles.grid}>
-          <section>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>
-                <Utensils size={20} />
-                材料
-              </h2>
-              <div className={styles.servingsSelector}>
-                {[1, 2, 3, 4].map(num => (
-                  <button 
-                    key={num}
-                    className={`${styles.servingButton} ${targetServings === num ? styles.activeServing : ''}`}
-                    onClick={() => setTargetServings(num)}
-                  >
-                    {num}
-                  </button>
-                ))}
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, marginRight: '0.5rem' }}>人分</span>
+          <aside className="space-y-6">
+            <div className="space-y-2">
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
+                {recipe.title}
+              </h1>
+              {recipe.base_servings && (
+                <p className="text-ink-500 font-medium">{recipe.base_servings}人分の分量</p>
+              )}
+            </div>
+
+            <div className="rounded-2xl bg-white ring-1 ring-line overflow-hidden">
+              <div className="p-4 border-b border-line bg-cream-50">
+                <h2 className="font-bold flex items-center gap-2">
+                  <Utensils className="w-4 h-4 text-forest-500" />
+                  <span>抽出された材料</span>
+                </h2>
               </div>
-            </div>
-            <div className={styles.ingredientList}>
-              {recipe.ingredients.map((ing: any, i: number) => {
-                const scaled = scaleAmount(ing.amount_value, recipe.base_servings, targetServings)
-                return (
-                  <div key={i} className={styles.ingredientItem}>
-                    <span className={styles.ingredientName}>{ing.name}</span>
-                    <span className={styles.ingredientAmountText}>
-                      {formatIngredientAmount(scaled, ing.unit, ing.original_text, recipe.base_servings, targetServings)}
+              <ul className="divide-y divide-line">
+                {recipe.ingredients.map((ing: any, i: number) => (
+                  <li key={i} className="px-4 py-3 flex items-center gap-3">
+                    <span className="flex-1 text-[14px]">{ing.name}</span>
+                    <span className="text-[14px] font-medium tnum">
+                      {prettyAmount(ing.amount_value)}
+                      <span className="text-ink-500 text-[12px] ml-0.5">{ing.unit}</span>
                     </span>
-                  </div>
-                )
-              })}
+                  </li>
+                ))}
+              </ul>
             </div>
-          </section>
 
-          <section>
-            <h2 className={styles.sectionTitle}>
-              <ListChecks size={20} />
-              手順
-            </h2>
-            <div className={styles.stepList}>
-              {recipe.steps.map((step: any, i: number) => (
-                <div key={i} className={styles.stepItem}>
-                  <div className={styles.stepNumber}>{step.step_number}</div>
-                  <div className={styles.stepContent}>{step.instruction}</div>
-                </div>
-              ))}
+            <div className="rounded-2xl bg-white ring-1 ring-line overflow-hidden">
+              <div className="p-4 border-b border-line bg-cream-50">
+                <h2 className="font-bold flex items-center gap-2">
+                  <ListChecks className="w-4 h-4 text-forest-500" />
+                  <span>抽出された手順</span>
+                </h2>
+              </div>
+              <ul className="divide-y divide-line">
+                {recipe.steps.map((step: any, i: number) => (
+                  <li key={i} className="px-4 py-3 flex gap-3">
+                    <span className="w-6 h-6 rounded flex items-center justify-center bg-coral-100 text-coral-600 text-[12px] font-bold shrink-0">
+                      {step.step_number}
+                    </span>
+                    <p className="text-[14px] leading-relaxed text-ink-900 mt-0.5">
+                      {step.instruction}
+                    </p>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </section>
-        </div>
+          </aside>
+        </section>
       </div>
     </div>
   )

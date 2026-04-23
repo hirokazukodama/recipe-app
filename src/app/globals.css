@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   /* Colors - Fresh, Warm, and Appetizing Palette */
   --bg-color: #fcfaf8; /* Warm Off-white */
