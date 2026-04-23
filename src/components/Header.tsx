@@ -6,27 +6,25 @@ import { Plus, ChefHat } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
 
-export default function Header() {
+export default function Header({ initialUser }: { initialUser: any }) {
   const pathname = usePathname()
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<any>(initialUser)
   const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-    })
-    
+    // サーバーサイドからの初期値をセット（ハイドレーション対策）
+    if (initialUser) setUser(initialUser)
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
     })
 
     return () => subscription.unsubscribe()
-  }, [])
+  }, [initialUser, supabase.auth])
 
   const shouldHideAddButton = 
     pathname.startsWith('/auth/') || 
-    pathname.startsWith('/import') || 
-    pathname.startsWith('/recipes/')
+    pathname.startsWith('/import')
 
   return (
     <header className="sticky top-0 z-30 bg-cream-50/80 backdrop-blur border-b border-line">
@@ -44,10 +42,11 @@ export default function Header() {
               {!shouldHideAddButton && (
                 <Link
                   href="/import"
-                  className="hidden xs:inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full bg-coral-500 hover:bg-coral-600 text-white text-sm font-bold shadow-cta transition shrink-0"
+                  className="inline-flex items-center gap-1.5 h-9 px-3 xs:px-4 rounded-full bg-coral-500 hover:bg-coral-600 text-white text-sm font-bold shadow-cta transition shrink-0"
+                  aria-label="レシピを追加"
                 >
                   <Plus className="w-4 h-4" />
-                  <span>追加</span>
+                  <span className="hidden xs:inline">追加</span>
                 </Link>
               )}
               <button className="w-9 h-9 rounded-full bg-white ring-1 ring-line flex place-items-center justify-center shadow-soft shrink-0">

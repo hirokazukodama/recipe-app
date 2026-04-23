@@ -3,6 +3,7 @@ import { Inter, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 
 import Header from "@/components/Header";
+import { createClient } from "@/utils/supabase/server";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -39,15 +40,18 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   return (
     <html lang="ja" className={`${inter.variable} ${noto.variable}`}>
       <body className="font-sans bg-cream-50 text-ink-900 antialiased">
-        <Header />
+        <Header initialUser={user} />
         <main className="min-h-[calc(100vh-56px)]">
           {children}
         </main>
