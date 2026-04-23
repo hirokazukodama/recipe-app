@@ -66,12 +66,15 @@ function timeToSeconds(timeStr: string): number {
   return 0;
 }
 
+import CookingModeOverlay from "@/components/CookingModeOverlay";
+
 // ---------- Component ----------
 export default function RecipeDetailClient({ recipe, sortedSteps }: { recipe: any; sortedSteps: any[] }) {
   const router = useRouter();
   const [servings, setServings] = useState<number>(recipe.base_servings || 2);
   const [checkedIng, setCheckedIng] = useState<Set<number>>(new Set());
   const [checkedStep, setCheckedStep] = useState<Set<number>>(new Set());
+  const [isCookingModeOpen, setIsCookingModeOpen] = useState(false);
 
   const scaledIngredients = useMemo(
     () =>
@@ -306,7 +309,10 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: { recipe: an
                 完了したステップはタップで打ち消せます
               </p>
             </div>
-            <button className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-white ring-1 ring-line hover:bg-cream-100 text-sm font-medium text-ink-700 transition">
+            <button 
+              onClick={() => setIsCookingModeOpen(true)}
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-white ring-1 ring-line hover:bg-cream-100 text-sm font-medium text-ink-700 transition"
+            >
               <Play className="w-4 h-4" />
               <span>調理モード</span>
             </button>
@@ -374,12 +380,22 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: { recipe: an
       >
         <div className="mx-3 mb-3 rounded-2xl bg-white/95 backdrop-blur border border-line shadow-soft p-2 flex items-center gap-2">
           <ServingsStepper servings={servings} onAdjust={adjust} layout="bar" />
-          <button className="h-11 px-4 rounded-xl bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold shadow-cta inline-flex items-center gap-1.5 transition">
+          <button 
+            onClick={() => setIsCookingModeOpen(true)}
+            className="h-11 px-4 rounded-xl bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold shadow-cta inline-flex items-center gap-1.5 transition"
+          >
             <Play className="w-4 h-4" />
             <span>調理開始</span>
           </button>
         </div>
       </div>
+
+      <CookingModeOverlay 
+        isOpen={isCookingModeOpen}
+        onClose={() => setIsCookingModeOpen(false)}
+        recipe={{ title: recipe.title, image_url: recipe.image_url }}
+        steps={sortedSteps.map((s: any) => ({ id: s.id, text: s.instruction }))}
+      />
     </div>
   );
 }
