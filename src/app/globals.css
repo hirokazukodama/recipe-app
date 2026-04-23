@@ -1,132 +1,74 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  /* Colors - Fresh, Warm, and Appetizing Palette */
-  --bg-color: #fcfaf8; /* Warm Off-white */
-  --surface-color: #ffffff; /* Pure White */
-  --surface-hover: #f9f7f5;
-  --primary-color: #ff6b6b; /* Warm Coral/Appetizing Red */
-  --primary-hover: #fa5252;
-  --accent-color: #606c38; /* Sage Green for freshness */
-  --text-primary: #2d241e; /* Deep Coffee/Charcoal */
-  --text-secondary: #6b5d54; /* Muted Brown */
-  --text-muted: #a3948b;
-  --border-color: #eee9e4;
-  --error-color: #e03131;
-  --success-color: #51cf66;
-  
-  /* Layout & Glassmorphism (adapted for light) */
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(0, 0, 0, 0.05);
-  --blur: 10px;
+@theme {
+  /* Breakpoints */
+  --breakpoint-xs: 480px;
 
-  /* Spacing & Shadows - Softer and more natural */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 40px;
-  --shadow-sm: 0 2px 4px rgba(45, 36, 30, 0.05);
-  --shadow-md: 0 4px 12px rgba(45, 36, 30, 0.08);
-  --shadow-lg: 0 12px 24px rgba(45, 36, 30, 0.12);
+  /* Colors - Defined according to the spec */
+  --color-cream-50: #FCFAF7;
+  --color-cream-100: #F7F2EA;
+  --color-cream-200: #EFE7DA;
   
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --color-ink-900: #1A1614;
+  --color-ink-700: #2E2825;
+  --color-ink-500: #6B635E;
+  --color-ink-300: #B5ADA7;
   
+  --color-coral-50: #FFF3EF;
+  --color-coral-100: #FFE2D9;
+  --color-coral-300: #F5A08F;
+  --color-coral-500: #E65F4D;
+  --color-coral-600: #D44A37;
+  --color-coral-700: #B23A29;
+  
+  --color-forest-500: #3A6B4C;
+  --color-forest-700: #2B4F38;
+  
+  --color-line: #EFE9E2;
+
+  /* Shadows */
+  --shadow-soft: 0 1px 2px rgba(26,22,20,0.04), 0 4px 20px -8px rgba(26,22,20,0.08);
+  --shadow-cta: 0 1px 0 rgba(255,255,255,0.25) inset, 0 10px 24px -10px rgba(230,95,77,0.55);
+
   /* Fonts */
-  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
-  --font-serif: var(--font-noto-serif), serif;
+  --font-sans: var(--font-inter), var(--font-noto), system-ui, sans-serif;
 }
 
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
+/* Custom Base Resets if needed, but Tailwind 4 handles most */
+@layer base {
+  body {
+    @apply bg-cream-50 text-ink-900 antialiased;
+  }
+  
+  /* Prevent horizontal scroll on mobile */
+  html, body {
+    overflow-x: hidden;
+  }
 
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--bg-color);
-  color: var(--text-primary);
-  line-height: 1.7;
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  min-height: 100vh;
-}
-
-/* Scrollbar Style */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-color);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-  transition: var(--transition);
-}
-
-button {
-  cursor: pointer;
-  border: none;
-  font-family: inherit;
-  background: none;
-  transition: var(--transition);
-}
-
-button:active {
-  transform: scale(0.96);
-}
-
-input, textarea {
-  font-family: inherit;
-  font-size: 1rem;
-}
-
-h1, h2, h3, h4 {
-  font-family: var(--font-serif);
-  font-weight: 700;
-  line-height: 1.3;
-  margin: 0;
-}
-
-/* Common Layout Utilities */
-.container {
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-}
-
-@media (max-width: 640px) {
-  .container {
-    padding: 0 1.25rem;
+  /* Standard typography resets to ensure consistency */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight text-ink-900;
   }
 }
 
-.glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--blur));
-  -webkit-backdrop-filter: blur(var(--blur));
-  border: 1px solid var(--glass-border);
+/* Utilities for hiding scrollbars but keeping functionality */
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
-.gradient-text {
-  background: linear-gradient(135deg, var(--primary-color), #ff8e3c);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Ensure images don't overflow */
+img {
+  max-width: 100%;
+  height: auto;
 }
 
-.antialiased {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Custom transitions */
+.transition-all-300 {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }

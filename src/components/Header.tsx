@@ -31,40 +31,40 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-30 bg-cream-50/80 backdrop-blur border-b border-line">
       <div className="max-w-5xl mx-auto h-14 px-4 sm:px-6 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2 shrink-0">
           <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-coral-500 to-coral-700 flex place-items-center justify-center text-white shadow-soft">
             <ChefHat className="w-4 h-4" />
           </span>
-          <span className="text-[15px] font-semibold tracking-tight text-ink-900">Recipe AI</span>
+          <span className="text-[15px] font-bold tracking-tight text-ink-900 hidden xs:block">Recipe AI</span>
         </Link>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 sm:gap-4">
           {user ? (
             <>
               {!shouldHideAddButton && (
                 <Link
                   href="/import"
-                  className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-coral-500 hover:bg-coral-600 text-white text-sm font-medium shadow-cta transition"
+                  className="hidden xs:inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full bg-coral-500 hover:bg-coral-600 text-white text-sm font-bold shadow-cta transition shrink-0"
                 >
                   <Plus className="w-4 h-4" />
-                  <span>レシピを追加</span>
+                  <span>追加</span>
                 </Link>
               )}
-              <button className="w-9 h-9 rounded-full bg-white ring-1 ring-line flex place-items-center justify-center">
-                <span className="text-[11px] font-semibold text-ink-700">
+              <button className="w-9 h-9 rounded-full bg-white ring-1 ring-line flex place-items-center justify-center shadow-soft shrink-0">
+                <span className="text-[11px] font-bold text-ink-700">
                   {user.email ? user.email.charAt(0).toUpperCase() : 'U'}
                 </span>
               </button>
             </>
           ) : (
-            <>
-              <Link href="/auth/login" className="text-sm font-medium text-ink-700 hover:text-ink-900 px-3 py-2 transition">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <Link href="/auth/login" className="text-sm font-bold text-ink-700 hover:text-ink-900 px-2 sm:px-3 py-2 transition shrink-0">
                 ログイン
               </Link>
-              <Link href="/auth/signup" className="h-9 px-4 inline-flex items-center justify-center rounded-full bg-ink-900 text-white text-sm font-medium hover:bg-ink-700 transition">
+              <Link href="/auth/signup" className="h-9 px-4 inline-flex items-center justify-center rounded-full bg-ink-900 text-white text-sm font-bold hover:bg-ink-700 transition shadow-soft shrink-0 whitespace-nowrap">
                 無料で始める
               </Link>
-            </>
+            </div>
           )}
         </div>
       </div>
