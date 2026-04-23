@@ -11,9 +11,8 @@ export default function Header() {
   // レシピ追加ボタンを表示しない条件
   const shouldHideAddButton = 
     pathname.startsWith('/auth/') || 
-    pathname === '/import' || 
-    pathname === '/import/preview' ||
-    pathname.endsWith('/edit')
+    pathname.startsWith('/import') || 
+    pathname.startsWith('/recipes/')
 
   return (
     <header className={styles.header}>
