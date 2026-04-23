@@ -118,17 +118,8 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: { recipe: an
 
   return (
     <div className="min-h-screen bg-cream-50 text-ink-900">
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 pb-32">
-        {/* Back */}
-        <nav className="pt-6">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-white ring-1 ring-line text-sm font-bold text-ink-700 hover:bg-cream-100 transition shadow-soft"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>一覧へ戻る</span>
-          </Link>
-        </nav>
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 pb-32">        {/* Mobile Spacing for Sticky Header */}
+        <div className="pt-4 md:pt-8" />
 
         {/* Hero */}
         <section className="mt-4 grid md:grid-cols-[minmax(0,1fr)_340px] gap-6 md:gap-8 items-start">
