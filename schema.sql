@@ -8,6 +8,8 @@ CREATE TABLE public.recipes (
   title text NOT NULL,
   source_url text,
   base_servings int4,
+  minutes int4,
+  difficulty text,
   image_url text,
   is_confirmed boolean DEFAULT false,
   created_at timestamptz DEFAULT now(),

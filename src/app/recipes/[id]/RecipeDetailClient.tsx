@@ -182,8 +182,8 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: { recipe: an
 
             {/* Meta pills */}
             <div className="grid grid-cols-3 gap-2">
-              <MetaPill label="調理時間" value="-" unit="分" />
-              <MetaPill label="難易度" value="-" />
+              {recipe.minutes != null && <MetaPill label="調理時間" value={recipe.minutes} unit="分" />}
+              {recipe.difficulty != null && <MetaPill label="難易度" value={recipe.difficulty} />}
               <MetaPill label="分量" value={servings} unit="人分" />
             </div>
 

@@ -46,6 +46,8 @@ export default function RecipeEditForm({ initialRecipe }: Props) {
         base_servings: recipe.base_servings,
         image_url: recipe.image_url,
         source_url: recipe.source_url,
+        minutes: recipe.minutes,
+        difficulty: recipe.difficulty,
         ingredients: ingredients.filter(ing => ing.name.trim()),
         steps: steps.filter(step => step.instruction.trim()),
         tags
@@ -212,6 +214,32 @@ export default function RecipeEditForm({ initialRecipe }: Props) {
                 />
                 <span className={styles.fieldLabel}>人分</span>
               </div>
+            </div>
+            <div className={styles.fieldGroup}>
+              <label className={styles.fieldLabel}>調理時間</label>
+              <div className={styles.servingsInputWrapper}>
+                <input 
+                  type="number"
+                  value={recipe.minutes || ''}
+                  onChange={(e) => setRecipe({ ...recipe, minutes: parseInt(e.target.value) || null })}
+                  className={styles.servingsInput}
+                  placeholder="30"
+                />
+                <span className={styles.fieldLabel}>分</span>
+              </div>
+            </div>
+            <div className={styles.fieldGroup}>
+              <label className={styles.fieldLabel}>難易度</label>
+              <select 
+                value={recipe.difficulty || ''}
+                onChange={(e) => setRecipe({ ...recipe, difficulty: e.target.value || null })}
+                className={styles.inputFull}
+              >
+                <option value="">未設定</option>
+                <option value="初級">初級</option>
+                <option value="中級">中級</option>
+                <option value="上級">上級</option>
+              </select>
             </div>
           </section>
 

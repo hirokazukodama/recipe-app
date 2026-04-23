@@ -14,6 +14,7 @@ interface Recipe {
   image_url?: string
   source_url?: string
   base_servings?: number
+  minutes?: number
   created_at: string
   recipe_tags?: {
     tags: {
@@ -245,7 +246,10 @@ export default function RecipeDashboard({
                   )}
 
                   <div className="mt-3 flex items-center justify-between text-xs font-medium text-ink-500">
-                    <span>{recipe.base_servings ? `${recipe.base_servings}人分` : '-'}</span>
+                    <span>
+                      {recipe.base_servings ? `${recipe.base_servings}人分` : '-'}
+                      {recipe.minutes != null && ` · ${recipe.minutes}分`}
+                    </span>
                     <time className="tnum">{relativeDate(recipe.created_at)}</time>
                   </div>
                 </div>

@@ -96,6 +96,8 @@ JSON構造：
 {
   "title": "料理名",
   "base_servings": 人数（数値。「3〜4人前」のような範囲表記の場合は少ない方の数値を採用すること。例：「3〜4人前」→ 3。不明ならnull）,
+  "minutes": 合計調理時間（数値、分。不明時はnull）,
+  "difficulty": "初級" | "中級" | "上級" | null,
   "tags": ["タグ1", "タグ2", "タグ3"],
   "ingredients": [
     {
@@ -186,6 +188,8 @@ export async function saveRecipe(recipeData: any) {
       user_id: user.id,
       title: recipeData.title,
       base_servings: recipeData.base_servings,
+      minutes: recipeData.minutes,
+      difficulty: recipeData.difficulty,
       image_url: recipeData.image_url,
       source_url: recipeData.source_url,
       is_confirmed: true
@@ -287,6 +291,8 @@ export async function updateRecipe(id: string, recipeData: any) {
     .update({
       title: recipeData.title,
       base_servings: recipeData.base_servings,
+      minutes: recipeData.minutes,
+      difficulty: recipeData.difficulty,
       image_url: recipeData.image_url,
       source_url: recipeData.source_url,
       updated_at: new Date().toISOString()
