@@ -222,7 +222,7 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: { recipe: an
 
         <div className="mt-10 md:mt-14 grid lg:grid-cols-[380px_minmax(0,1fr)] gap-10 items-start">
           {/* ======== Ingredients ======== */}
-          <section>
+          <section className="lg:sticky lg:top-24">
           <div className="flex flex-wrap items-end justify-between gap-4 mb-4">
             <div>
               <h2 className="text-xl font-bold tracking-tight inline-flex items-center gap-2">
