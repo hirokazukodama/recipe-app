@@ -220,8 +220,9 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: { recipe: an
           </aside>
         </section>
 
-        {/* ======== Ingredients ======== */}
-        <section className="mt-10 md:mt-14">
+        <div className="mt-10 md:mt-14 grid lg:grid-cols-[380px_minmax(0,1fr)] gap-10 items-start">
+          {/* ======== Ingredients ======== */}
+          <section>
           <div className="flex flex-wrap items-end justify-between gap-4 mb-4">
             <div>
               <h2 className="text-xl font-bold tracking-tight inline-flex items-center gap-2">
@@ -297,8 +298,8 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: { recipe: an
           </div>
         </section>
 
-        {/* ======== Steps ======== */}
-        <section className="mt-10 md:mt-14">
+          {/* ======== Steps ======== */}
+          <section className="mt-4 lg:mt-0">
           <div className="flex flex-wrap items-end justify-between gap-4 mb-4">
             <div>
               <h2 className="text-xl font-bold tracking-tight inline-flex items-center gap-2">
@@ -370,6 +371,7 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: { recipe: an
             })}
           </ol>
         </section>
+        </div>
 
         <div className="h-10" />
       </main>
