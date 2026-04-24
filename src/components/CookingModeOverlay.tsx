@@ -22,6 +22,7 @@ interface CookingModeOverlayProps {
 
 export default function CookingModeOverlay({ isOpen, onClose, recipe, steps }: CookingModeOverlayProps) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
+  const [isCompleting, setIsCompleting] = useState(false)
   const wakeLockRef = useRef<any>(null)
   
   // スワイプ操作用のステート
@@ -53,11 +54,20 @@ export default function CookingModeOverlay({ isOpen, onClose, recipe, steps }: C
   }
 
   const goToNext = () => {
+    if (isCompleting) return
+
     if (currentStepIndex < steps.length - 1) {
       setCurrentStepIndex(prev => prev + 1)
     } else if (currentStepIndex === steps.length - 1) {
       // 完了時の処理
+      setIsCompleting(true)
       fireConfetti()
+      // アニメーションを少し見せてから閉じる
+      setTimeout(() => {
+        onClose()
+        // 遷移後にステートをリセット（再開時のため）
+        setTimeout(() => setIsCompleting(false), 500)
+      }, 2000)
     }
   }
 
@@ -147,6 +157,7 @@ export default function CookingModeOverlay({ isOpen, onClose, recipe, steps }: C
     } else {
       document.body.style.overflow = 'unset'
       setCurrentStepIndex(0) // 閉じたらリセット
+      setIsCompleting(false) // 閉じたらリセット
     }
     return () => {
       document.body.style.overflow = 'unset'
@@ -236,7 +247,9 @@ export default function CookingModeOverlay({ isOpen, onClose, recipe, steps }: C
           
           <button 
             onClick={goToNext}
+            disabled={isCompleting}
             className={`pointer-events-auto flex items-center justify-center h-14 rounded-full px-8 font-bold text-lg transition-all shadow-cta ${
+              isCompleting ? 'bg-forest-700 opacity-80 cursor-not-allowed scale-95' :
               currentStepIndex === steps.length - 1 
                 ? 'bg-forest-500 hover:bg-forest-600 gap-2' 
                 : 'bg-coral-500 hover:bg-coral-600'
