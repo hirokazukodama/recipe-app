@@ -48,17 +48,18 @@ export async function extractRecipe(input: string) {
         // 字幕を取得 (オプション)
         let transcript = ''
         try {
-          const transcriptData = await YoutubeTranscript.fetchTranscript(youtubeId)
+          // 日本語の字幕を優先的に取得
+          const transcriptData = await YoutubeTranscript.fetchTranscript(youtubeId, { lang: 'ja' })
           const rawTranscript = transcriptData.map(t => t.text).join(' ')
-          // Geminiへの送信データ量を抑えるため先頭4000文字に制限
-          transcript = rawTranscript.slice(0, 4000)
+          // Geminiへの送信データ量を抑えるため先頭5000文字に制限（文字起こしは会話が多いため少し多めに）
+          transcript = rawTranscript.slice(0, 5000)
         } catch (e) {
           console.warn('Transcript not available:', e)
         }
 
-        // 説明欄も長い場合があるため1000文字に制限
-        const trimmedDescription = description.slice(0, 1000)
-        textToProcess = `Title: ${title}\nDescription: ${trimmedDescription}\nTranscript: ${transcript}`
+        // 説明欄も長い（広告等が多い）場合があるため4000文字程度まで許容
+        const trimmedDescription = description.slice(0, 4000)
+        textToProcess = `Title: ${title}\n\n[Description]\n${trimmedDescription}\n\n[Transcript]\n${transcript}`
         autoImageUrl = `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`
       } else {
         // 一般的なURLの場合
@@ -73,8 +74,13 @@ export async function extractRecipe(input: string) {
   }
 
   const prompt = `
-以下のレシピ関連テキストから、料理名、分量（人数）、材料リスト、調理手順を抽出し、以下のJSON形式で出力してください。
+以下のレシピ関連テキスト（動画のタイトル、説明欄、および文字起こし）から、料理名、分量（人数）、材料リスト、調理手順を抽出し、以下のJSON形式で出力してください。
 JSON以外のテキストは一切含めないでください。
+
+【テキストの優先順位とノイズ除去】
+- 説明欄（Description）に材料リストがある場合はそれを優先的に使用してください。
+- 説明欄に広告、商品リンク、アフィリエイト情報、SNSリンク、定型文などのノイズが多い場合は、それらを無視し、レシピに関連する部分のみを特定してください。
+- 説明欄に手順が詳しく書かれていない場合は、文字起こし（Transcript）の会話内容から調理の具体的な手順を論理的に推測・整理して作成してください。
 
 【最重要ルール：ハルシネーションの防止】
 - 提供された「レシピテキスト」に書かれている内容のみを使用してください。
