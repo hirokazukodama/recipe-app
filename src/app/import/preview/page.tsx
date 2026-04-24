@@ -207,8 +207,17 @@ export default function PreviewPage() {
                   <li key={i} className="px-4 py-3 flex items-center gap-3">
                     <span className="flex-1 text-[14px]">{ing.name}</span>
                     <span className="text-[14px] font-medium tnum">
-                      {prettyAmount(ing.amount_value)}
-                      <span className="text-ink-500 text-[12px] ml-0.5">{ing.unit}</span>
+                      {["大さじ", "小さじ", "カップ"].some(u => ing.unit?.includes(u)) ? (
+                        <>
+                          <span className="text-ink-500 text-[12px] mr-0.5">{ing.unit}</span>
+                          {prettyAmount(ing.amount_value)}
+                        </>
+                      ) : (
+                        <>
+                          {prettyAmount(ing.amount_value)}
+                          <span className="text-ink-500 text-[12px] ml-0.5">{ing.unit}</span>
+                        </>
+                      )}
                     </span>
                   </li>
                 ))}

@@ -275,10 +275,17 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: { recipe: an
                             : "text-ink-900"
                         }`}
                       >
-                        {prettyAmount(ing.scaled)}
-                        <span className="text-ink-500 font-medium ml-0.5 text-[13px]">
-                          {ing.unit}
-                        </span>
+                        {["大さじ", "小さじ", "カップ"].some(u => ing.unit?.includes(u)) ? (
+                          <>
+                            <span className="text-ink-500 font-medium mr-0.5 text-[13px]">{ing.unit}</span>
+                            {prettyAmount(ing.scaled)}
+                          </>
+                        ) : (
+                          <>
+                            {prettyAmount(ing.scaled)}
+                            <span className="text-ink-500 font-medium ml-0.5 text-[13px]">{ing.unit}</span>
+                          </>
+                        )}
                       </span>
                     </button>
                   </li>
