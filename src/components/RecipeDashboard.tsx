@@ -134,23 +134,24 @@ export default function RecipeDashboard({
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
       {/* Meta & Search */}
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <p className="text-sm text-ink-500 font-bold">
+        <p className="text-sm text-ink-500 font-bold shrink-0">
           全 {total} 件のレシピ
         </p>
-      </div>
 
-      {/* Search & Tags */}
-      <div className="mb-8 space-y-4">
-        <div className="relative max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-300" />
+        <div className="relative w-full sm:max-w-xs md:max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-300" />
           <input 
             type="text" 
             placeholder="レシピを検索..." 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-11 pl-11 pr-4 rounded-xl bg-white ring-1 ring-line focus:outline-none focus:ring-2 focus:ring-coral-500 transition shadow-sm text-[15px]"
+            className="w-full h-10 pl-10 pr-4 rounded-full bg-white ring-1 ring-line focus:outline-none focus:ring-2 focus:ring-coral-500 transition shadow-soft text-sm"
           />
         </div>
+      </div>
+
+      {/* Tags */}
+      <div className="mb-8">
 
         {allTags.length > 0 && (
           <div className="relative flex items-center">
