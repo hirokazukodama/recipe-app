@@ -19,7 +19,7 @@ async function AuthBoundContent() {
 
   if (!user) {
     return (
-      <div className="relative overflow-hidden bg-cream-50 pt-16 pb-24 sm:pt-24 sm:pb-32">
+      <div className="relative overflow-hidden bg-cream-50 pt-20 pb-24 sm:pt-32 sm:pb-32">
         {/* Decorative Background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-coral-100/30 blur-[120px] rounded-full" />
@@ -27,11 +27,7 @@ async function AuthBoundContent() {
         </div>
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white ring-1 ring-line shadow-soft mb-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            <span className="flex h-2 w-2 rounded-full bg-coral-500 animate-pulse" />
-            <span className="text-xs font-bold tracking-wider text-ink-500 uppercase">AI Recipe Manager</span>
-          </div>
-          
+
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-ink-900 leading-[1.1] mb-8">
             お気に入りのレシピを<br />
             <span className="bg-gradient-to-r from-coral-500 to-coral-600 bg-clip-text text-transparent">一瞬で「自分のもの」に。</span>
