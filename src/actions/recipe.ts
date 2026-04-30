@@ -131,7 +131,9 @@ ${textToProcess}
   
   // リトライ処理を含めた生成
   let responseText = ''
-  let retries = 3
+  let retries = 5 // リトライ回数を5回に増やす
+  let waitTime = 2000 // 初期待機時間を2秒に
+
   while (retries > 0) {
     try {
       const result = await model.generateContent(prompt)
@@ -139,13 +141,19 @@ ${textToProcess}
       break
     } catch (error: any) {
       retries--
-      if (retries === 0 || !error.message?.includes('503')) {
+      // 503(Service Unavailable) または 429(Too Many Requests) の場合はリトライ
+      const isRetryableError = error.message?.includes('503') || error.message?.includes('429');
+      
+      if (retries === 0 || !isRetryableError) {
         console.error('Gemini extraction error:', error)
         const errorMessage = error?.message || '不明なエラー'
         return { error: `レシピの解析に失敗しました（${errorMessage}）。しばらく時間をおいてから再度お試しください。` }
       }
-      // 1秒待ってリトライ
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      console.warn(`Gemini API error, retrying in ${waitTime}ms... (Remaining retries: ${retries})`)
+      // 指数関数的バックオフ（待機時間を倍々に増やす）
+      await new Promise(resolve => setTimeout(resolve, waitTime))
+      waitTime *= 2 
     }
   }
 
