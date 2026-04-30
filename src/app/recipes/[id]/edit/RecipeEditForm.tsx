@@ -96,6 +96,11 @@ export default function RecipeEditForm({ initialRecipe }: Props) {
   const updateIngredient = (index: number, field: string, value: string) => {
     const newIngs = [...ingredients]
     newIngs[index] = { ...newIngs[index], [field]: value }
+    // 分量テキストが手動変更された場合、古い解析値（数値・単位）をクリアして表示の不整合を防ぐ
+    if (field === 'original_text') {
+      newIngs[index].amount_value = null
+      newIngs[index].unit = null
+    }
     setIngredients(newIngs)
   }
   const addIngredient = () => setIngredients([...ingredients, { name: '', original_text: '' }])
