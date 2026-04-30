@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { formatIngredientAmount } from "@/utils/recipe-utils";
 
 // ---------- Helpers ----------
 function prettyAmount(v: number | null): string {
@@ -275,7 +276,9 @@ export default function RecipeDetailClient({ recipe, sortedSteps }: { recipe: an
                             : "text-ink-900"
                         }`}
                       >
-                        {["大さじ", "小さじ", "カップ"].some(u => ing.unit?.includes(u)) ? (
+                        {ing.amount_value === null && ing.original_text ? (
+                          formatIngredientAmount(null, ing.unit, ing.original_text, recipe.base_servings, servings)
+                        ) : ["大さじ", "小さじ", "カップ"].some(u => ing.unit?.includes(u)) ? (
                           <>
                             <span className="text-ink-500 font-medium mr-0.5 text-[13px]">{ing.unit}</span>
                             {prettyAmount(ing.scaled)}
